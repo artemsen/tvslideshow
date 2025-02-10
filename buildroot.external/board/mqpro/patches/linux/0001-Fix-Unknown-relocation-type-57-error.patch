@@ -1,0 +1,27 @@
+From 0a34a42d4a65c9f6b1b5ddcf3e9d6f63ed06da90 Mon Sep 17 00:00:00 2001
+From: Artem Senichev <artemsen@gmail.com>
+Date: Thu, 6 Feb 2025 11:11:37 +0300
+Subject: [PATCH] Fix "Unknown relocation type 57" error
+
+Allows to build old RISC-V kernel with modern compiler.
+
+Signed-off-by: Artem Senichev <artemsen@gmail.com>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile b/Makefile
+index 28026d1ebb9d..6e100c69b027 100644
+--- a/Makefile
++++ b/Makefile
+@@ -561,6 +561,7 @@ LINUXINCLUDE    := \
+ KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
+ KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
+ 		   -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
++		   -fno-asynchronous-unwind-tables -fno-unwind-tables \
+ 		   -Werror=implicit-function-declaration -Werror=implicit-int \
+ 		   -Werror=return-type -Wno-format-security \
+ 		   -std=gnu11
+-- 
+2.48.1
+

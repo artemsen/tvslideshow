@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#
+# Service to start slide show
+#
+
+do_start()
+{
+  echo -n "Starting slide show: "
+  /usr/bin/slideshow /mnt/photos &
+  echo "OK"
+}
+
+do_stop()
+{
+  echo -n "Stopping slide show: "
+  killall slideshow
+  echo "OK"
+}
+
+case "$1" in
+  start)
+    do_start;;
+  stop)
+    do_stop;;
+  restart)
+    do_stop; do_start;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1;;
+esac

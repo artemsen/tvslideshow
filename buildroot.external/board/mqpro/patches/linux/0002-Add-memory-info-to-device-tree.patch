@@ -1,0 +1,29 @@
+From 10a24d145f91026c2f3abd87f22a5d999dc2449c Mon Sep 17 00:00:00 2001
+From: Artem Senichev <artemsen@gmail.com>
+Date: Thu, 6 Feb 2025 18:47:14 +0300
+Subject: [PATCH] Add memory info to device tree
+
+Signed-off-by: Artem Senichev <artemsen@gmail.com>
+---
+ arch/riscv/boot/dts/allwinner/sun20i-d1-mangopi-mq-pro.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/allwinner/sun20i-d1-mangopi-mq-pro.dts b/arch/riscv/boot/dts/allwinner/sun20i-d1-mangopi-mq-pro.dts
+index a7149baf1867..2c7b9216628c 100644
+--- a/arch/riscv/boot/dts/allwinner/sun20i-d1-mangopi-mq-pro.dts
++++ b/arch/riscv/boot/dts/allwinner/sun20i-d1-mangopi-mq-pro.dts
+@@ -23,6 +23,11 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x40000000 0x20000000>; /* 512 MB */
++	};
++
+ 	hdmi_connector: connector {
+ 		compatible = "hdmi-connector";
+ 		type = "c";
+-- 
+2.48.1
+

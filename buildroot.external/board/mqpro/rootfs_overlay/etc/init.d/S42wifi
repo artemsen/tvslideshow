@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#
+# Service to initialize wifi connection
+#
+
+PIDFILE_WPA="/run/wpa_supplicant.pid"
+PIDFILE_UDHCP="/run/udhcp.pid"
+
+do_start()
+{
+  WPA_CONF="/etc/wpa_supplicant.conf"
+  IFACE="wlan0"
+  echo -n "Start network on ${IFACE}: "
+  if [ ! -e ${WPA_CONF} ]; then
+    echo "Config file ${WPA_CONF} not found, skip wifi init"
+    return 0
+  fi
+  wpa_supplicant -B -P ${PIDFILE_WPA} -i ${IFACE} -c /etc/wpa_supplicant.conf >/dev/null
+  udhcpc -p ${PIDFILE_UDHCP} -i ${IFACE} -t 30 -n >/dev/null 2>&1 &
+  echo "OK"
+}
+
+do_stop()
+{
+  echo -n "Stopping network: "
+  if [ -e ${PIDFILE_UDHCP} ]; then
+    kill $(cat ${PIDFILE_UDHCP})
+    rm -f ${PIDFILE_UDHCP}
+  fi
+  if [ -e ${PIDFILE_WPA} ]; then
+    kill $(cat ${PIDFILE_WPA})
+    rm -f ${PIDFILE_WPA}
+  fi
+  echo "OK"
+}
+
+case "$1" in
+  start)
+    do_start;;
+  stop)
+    do_stop;;
+  restart)
+    do_stop; do_start;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1;;
+esac

@@ -1,0 +1,27 @@
+From a6f07ae2bb307bb9b839d9af9d43d9df4654ffbe Mon Sep 17 00:00:00 2001
+From: Artem Senichev <artemsen@gmail.com>
+Date: Fri, 7 Feb 2025 11:35:03 +0300
+Subject: [PATCH] Fix "Unknown relocation type 57" error
+
+Allows to build old RISC-V kernel with modern compiler.
+
+Signed-off-by: Artem Senichev <artemsen@gmail.com>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Makefile b/Makefile
+index ddd4561..c5b98f0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,6 +6,7 @@ EXTRA_CFLAGS += -O1
+ #EXTRA_CFLAGS += -pedantic
+ #EXTRA_CFLAGS += -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+ 
++EXTRA_CFLAGS += -fno-asynchronous-unwind-tables -fno-unwind-tables
+ EXTRA_CFLAGS += -Wno-unused-variable
+ EXTRA_CFLAGS += -Wno-unused-value
+ EXTRA_CFLAGS += -Wno-unused-label
+-- 
+2.48.1
+
