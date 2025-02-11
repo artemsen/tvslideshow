@@ -10,13 +10,15 @@
 /** Display context. */
 typedef struct display display;
 
-/** Display buffer. */
+/** Display frame buffer. */
 struct buffer {
-    size_t width;
-    size_t height;
-    size_t stride;
-    size_t size;
-    uint32_t* data;
+    uint8_t* data;   ///< Buffer data
+    size_t width;    ///< Buffer width (pixels)
+    size_t height;   ///< Buffer height (pixels)
+    size_t stride;   ///< Stride size in bytes
+    size_t size;     ///< Total size of the buffer (bytes)
+    uint32_t id;     ///< Buffer Id (DRM specific)
+    uint32_t handle; ///< Buffer handle (DRM specific)
 };
 
 /**
@@ -32,14 +34,14 @@ display* display_init(void);
 void display_free(display* display);
 
 /**
- * Get output desplay buffer.
+ * Begin drawing.
  * @param display pointer to the display context
- * @return pointer to the buffer description
+ * @return pointer to the current frame buffer
  */
-struct buffer* display_buffer(display* display);
+struct buffer* display_draw(display* display);
 
 /**
- * Flush buffer to display.
+ * Flush frame buffer to display.
  * @param display pointer to the display context
  */
-void display_flush(display* display);
+void display_commit(display* display);

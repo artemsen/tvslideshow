@@ -75,8 +75,14 @@ struct image* image_load(const char* path)
             (uint8_t*)&img->data[jpg.output_scanline * jpg.output_width];
         jpeg_read_scanlines(&jpg, &line, 1);
 
-        // convert 24-bit bgr to 32-bit xrgb
-        if (jpg.out_color_components == 3) {
+        // convert to 32-bit xrgb
+        if (jpg.out_color_components == 1) {
+            uint32_t* pixel = (uint32_t*)line;
+            for (int x = jpg.output_width - 1; x >= 0; --x) {
+                const xrgb_t c = *(line + x);
+                pixel[x] = ((xrgb_t)0xff << 24) | (c << 16) | (c << 8) | c;
+            }
+        } else if (jpg.out_color_components == 3) {
             uint32_t* pixel = (uint32_t*)line;
             for (int x = jpg.output_width - 1; x >= 0; --x) {
                 const uint8_t* src = line + x * 3;
