@@ -238,21 +238,23 @@ display* display_init(void)
 
 void display_free(display* display)
 {
-    if (display->crtc_save) {
-        drmModeCrtcPtr crtc = display->crtc_save;
-        drmModeSetCrtc(display->fd, crtc->crtc_id, crtc->buffer_id, crtc->x,
-                       crtc->y, &display->conn_id, 1, &crtc->mode);
-        drmModeFreeCrtc(crtc);
+    if (display) {
+        if (display->crtc_save) {
+            drmModeCrtcPtr crtc = display->crtc_save;
+            drmModeSetCrtc(display->fd, crtc->crtc_id, crtc->buffer_id, crtc->x,
+                           crtc->y, &display->conn_id, 1, &crtc->mode);
+            drmModeFreeCrtc(crtc);
+        }
+
+        free_fb(display, &display->fb[0]);
+        free_fb(display, &display->fb[1]);
+
+        if (display->fd != -1) {
+            close(display->fd);
+        }
+
+        free(display);
     }
-
-    free_fb(display, &display->fb[0]);
-    free_fb(display, &display->fb[1]);
-
-    if (display->fd != -1) {
-        close(display->fd);
-    }
-
-    free(display);
 }
 
 struct buffer* display_draw(display* display)
