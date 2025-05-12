@@ -96,6 +96,22 @@ static void add_dir(imglist* list, const char* path)
     closedir(dir_handle);
 }
 
+/**
+ * Shuffle image list.
+ * @param list image list context
+ */
+static void shuffle(imglist* list)
+{
+    for (size_t i = 0; i < list->size; ++i) {
+        const size_t j = rand() % list->size;
+        if (i != j) {
+            char* swap = list->files[i];
+            list->files[i] = list->files[j];
+            list->files[j] = swap;
+        }
+    }
+}
+
 imglist* imglist_init(const char* dir)
 {
     imglist* list = calloc(1, sizeof(*list));
@@ -115,15 +131,7 @@ imglist* imglist_init(const char* dir)
     // at this point the current field contains number of entries
     list->size = list->current;
 
-    // shuffle list
-    for (size_t i = 0; i < list->size; ++i) {
-        const size_t j = rand() % list->size;
-        if (i != j) {
-            char* swap = list->files[i];
-            list->files[i] = list->files[j];
-            list->files[j] = swap;
-        }
-    }
+    shuffle(list);
 
     return list;
 }
@@ -145,6 +153,7 @@ const char* imglist_next(imglist* list)
 
     do {
         if (++index >= list->size) {
+            shuffle(list);
             index = 0;
         }
     } while (!list->files[index] && index != list->current);
